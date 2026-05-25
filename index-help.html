@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Help — Neighbourhood Delivery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold:       #c9a84c;
+  --gold-dim:   #8a6f2e;
+  --gold-glow:  #c9a84c18;
+  --gold-border:#c9a84c33;
+  --bg:         #100e0a;
+  --bg-2:       #161310;
+  --bg-card:    #1a1710;
+  --surface:    #211e18;
+  --border:     #2e2a22;
+  --text:       #e8dfc8;
+  --text-dim:   #9a8f78;
+  --text-muted: #5a5244;
+  --success:    #4caf8a;
+  --info:       #4c8ac9;
+  --warn:       #c9844c;
+  --r:          4px;
+  --r-lg:       8px;
+  --font-head:  'Cinzel', serif;
+  --font-disp:  'Cormorant Garamond', serif;
+  --font-body:  'Raleway', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 15px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* ── Layout ── */
+.layout { display: flex; min-height: 100dvh; position: relative; z-index: 1; }
+
+/* Sidebar */
+.sidebar {
+  width: 260px; flex-shrink: 0;
+  background: var(--bg-2);
+  border-right: 1px solid var(--border);
+  position: sticky; top: 0; height: 100dvh;
+  overflow-y: auto; padding: 0 0 32px;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+
+.sidebar-brand {
+  padding: 28px 22px 22px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #c9a84c08 0%, transparent 100%);
+}
+.sidebar-logo {
+  font-family: var(--font-head);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 4px;
+}
+.sidebar-title {
+  font-family: var(--font-disp);
+  font-size: 20px; font-weight: 300;
+  font-style: italic; color: var(--text);
+}
+
+.sidebar-section {
+  padding: 18px 22px 6px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 22px;
+  font-size: 12px; color: var(--text-dim);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.14s;
+}
+.sidebar-link:hover { color: var(--gold); background: var(--gold-glow); border-left-color: var(--gold-border); }
+.sidebar-link.active { color: var(--gold); border-left-color: var(--gold); background: var(--gold-glow); }
+.sidebar-link-icon { font-size: 14px; flex-shrink: 0; }
+
+/* Main */
+.main { flex: 1; max-width: 780px; padding: 48px 40px 80px; }
+
+/* Hero */
+.hero {
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.hero-eyebrow {
+  font-family: var(--font-head);
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px;
+}
+.hero-title {
+  font-family: var(--font-disp);
+  font-size: 42px; font-weight: 300;
+  line-height: 1.15; color: var(--text);
+  margin-bottom: 16px;
+}
+.hero-title em { font-style: italic; color: var(--gold); }
+.hero-sub {
+  font-size: 15px; color: var(--text-dim);
+  max-width: 560px; line-height: 1.7;
+}
+
+/* Section */
+.section { margin-bottom: 48px; scroll-margin-top: 24px; }
+
+.section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-icon {
+  width: 38px; height: 38px; border-radius: var(--r-lg);
+  background: var(--gold-glow); border: 1px solid var(--gold-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.section-title {
+  font-family: var(--font-head);
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Step cards */
+.steps { display: flex; flex-direction: column; gap: 12px; }
+
+.step {
+  display: flex; gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px 18px;
+  transition: border-color 0.15s;
+}
+.step:hover { border-color: var(--gold-border); }
+
+.step-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--gold); color: var(--bg);
+  font-family: var(--font-head);
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.step-body {}
+.step-title {
+  font-size: 13px; font-weight: 700;
+  color: var(--text); margin-bottom: 4px;
+}
+.step-desc { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+
+/* Info cards */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px 18px;
+}
+.card-icon { font-size: 22px; margin-bottom: 8px; }
+.card-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.card-desc { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+
+/* FAQ */
+.faq { display: flex; flex-direction: column; gap: 8px; }
+
+.faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.faq-q {
+  width: 100%; background: none; border: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px; font-weight: 600;
+  color: var(--text); text-align: left;
+  transition: background 0.14s;
+}
+.faq-q:hover { background: var(--surface); }
+.faq-q-arrow {
+  font-size: 16px; color: var(--gold);
+  transition: transform 0.2s; flex-shrink: 0;
+}
+.faq-item.open .faq-q-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.28s ease;
+  font-size: 12px; color: var(--text-dim); line-height: 1.7;
+}
+.faq-item.open .faq-a { max-height: 400px; }
+.faq-a-inner { padding: 0 18px 16px; }
+
+/* Status table */
+.status-table { width: 100%; border-collapse: collapse; }
+.status-table th {
+  text-align: left; padding: 8px 12px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted); border-bottom: 1px solid var(--border);
+}
+.status-table td {
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+  font-size: 12px; color: var(--text-dim); vertical-align: top;
+}
+.status-table tr:last-child td { border-bottom: none; }
+.status-table .badge {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 10px;
+}
+.b-pending    { background: #c9844c22; color: var(--warn); }
+.b-confirmed  { background: #4c8ac922; color: var(--info); }
+.b-picking    { background: #4c8ac922; color: var(--info); }
+.b-packed     { background: #4caf8a22; color: var(--success); }
+.b-delivering { background: #4caf8a22; color: var(--success); }
+.b-delivered  { background: #4caf8a11; color: #4caf8a88; }
+.b-issue      { background: #c94c4c22; color: #c94c4c; }
+.b-cancelled  { background: #33333322; color: var(--text-muted); }
+
+/* Tip box */
+.tip {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 12px; color: var(--text-dim); line-height: 1.6;
+}
+.tip-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.tip strong { color: var(--gold); }
+
+.warn-box {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: #c9844c0f;
+  border: 1px solid #c9844c33;
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 12px; color: var(--text-dim); line-height: 1.6;
+}
+
+/* Divider */
+.divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+/* Mobile sidebar toggle */
+.mobile-menu-btn {
+  display: none;
+  position: fixed; top: 14px; left: 14px; z-index: 200;
+  background: var(--bg-card); border: 1px solid var(--gold-border);
+  border-radius: var(--r); color: var(--gold);
+  width: 38px; height: 38px;
+  align-items: center; justify-content: center; font-size: 18px;
+  cursor: pointer;
+}
+@media (max-width: 720px) {
+  .mobile-menu-btn { display: flex; }
+  .sidebar { position: fixed; left: -280px; z-index: 100; transition: left 0.24s; }
+  .sidebar.open { left: 0; box-shadow: 8px 0 32px rgba(0,0,0,0.6); }
+  .main { padding: 72px 20px 60px; }
+  .hero-title { font-size: 30px; }
+}
+</style>
+</head>
+<body>
+
+<button class="mobile-menu-btn" onclick="toggleSidebar()">&#9776;</button>
+
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">Neighbourhood Delivery</div>
+      <div class="sidebar-title">Customer Guide</div>
+    </div>
+
+    <div class="sidebar-section">Getting Started</div>
+    <a class="sidebar-link" href="#registration"><span class="sidebar-link-icon">&#x1F4DD;</span>Creating an Account</a>
+    <a class="sidebar-link" href="#verification"><span class="sidebar-link-icon">&#x1F4F1;</span>Verifying Your Number</a>
+    <a class="sidebar-link" href="#login"><span class="sidebar-link-icon">&#x1F511;</span>Signing In</a>
+
+    <div class="sidebar-section">Shopping</div>
+    <a class="sidebar-link" href="#browsing"><span class="sidebar-link-icon">&#x1F3EA;</span>Browsing Products</a>
+    <a class="sidebar-link" href="#cart"><span class="sidebar-link-icon">&#x1F6D2;</span>Your Cart</a>
+    <a class="sidebar-link" href="#checkout"><span class="sidebar-link-icon">&#x2705;</span>Placing an Order</a>
+
+    <div class="sidebar-section">After Your Order</div>
+    <a class="sidebar-link" href="#tracking"><span class="sidebar-link-icon">&#x1F4CB;</span>Tracking Orders</a>
+    <a class="sidebar-link" href="#whatsapp"><span class="sidebar-link-icon">&#x1F4AC;</span>WhatsApp Updates</a>
+    <a class="sidebar-link" href="#payment"><span class="sidebar-link-icon">&#x1F4B3;</span>Payment</a>
+
+    <div class="sidebar-section">Your Account</div>
+    <a class="sidebar-link" href="#account"><span class="sidebar-link-icon">&#x1F464;</span>Account Settings</a>
+    <a class="sidebar-link" href="#delivery-address"><span class="sidebar-link-icon">&#x1F4CD;</span>Delivery Address</a>
+    <a class="sidebar-link" href="#faq"><span class="sidebar-link-icon">&#x2753;</span>FAQ</a>
+  </nav>
+
+  <!-- ── Main ── -->
+  <main class="main">
+
+    <div class="hero">
+      <div class="hero-eyebrow">Customer Help Guide</div>
+      <h1 class="hero-title">Shopping made<br/><em>simple</em></h1>
+      <p class="hero-sub">Everything you need to know about browsing, ordering, and receiving your deliveries through the Neighbourhood Delivery app.</p>
+    </div>
+
+    <!-- ── Registration ── -->
+    <section class="section" id="registration">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4DD;</div>
+        <div class="section-title">Creating an Account</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Open the app and tap Register</div>
+            <div class="step-desc">On the welcome screen, make sure the Register tab is selected at the top.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Enter your details</div>
+            <div class="step-desc">Fill in your full name and your WhatsApp phone number. Email is optional but useful for records. Enter your street address in the address field.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Pin your delivery location on the map</div>
+            <div class="step-desc">Tap the map button under Delivery Location. A map will open — drag the pin to your exact delivery spot, or search for your address using the search bar at the top. Tap Confirm when the pin is in the right place.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Tap Create Account</div>
+            <div class="step-desc">Your registration is submitted. Your account will be in a pending state until the admin approves it and sends you a verification code via WhatsApp.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">&#x2728;</span>
+        <span><strong>PIN your location precisely.</strong> Your delivery fee is calculated based on the distance from the shops to your pinned location. The more accurate your pin, the more accurate your delivery fee.</span>
+      </div>
+    </section>
+
+    <!-- ── Verification ── -->
+    <section class="section" id="verification">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4F1;</div>
+        <div class="section-title">Verifying Your Number</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Wait for your WhatsApp message</div>
+            <div class="step-desc">Once the admin approves your account, you will receive a WhatsApp message containing a 6-digit verification code. This code expires after 30 minutes.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Enter the code in the app</div>
+            <div class="step-desc">Open the app and go to the verification screen. Type the 6 digits into the boxes — you can also paste the full code and it will fill automatically. The app will submit as soon as the last digit is entered.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Your account is now active</div>
+            <div class="step-desc">You will be taken directly to the shop. You can now browse products and place orders.</div>
+          </div>
+        </div>
+      </div>
+      <div class="warn-box">
+        <span class="tip-icon">&#x23F0;</span>
+        <span>The verification code expires after <strong>30 minutes</strong>. If yours expired, contact the admin and ask them to resend a new code.</span>
+      </div>
+    </section>
+
+    <!-- ── Login ── -->
+    <section class="section" id="login">
+      <div class="section-header">
+        <div class="section-icon">&#x1F511;</div>
+        <div class="section-title">Signing In</div>
+      </div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">After your account is verified, you sign in using your phone number and the 6-digit PIN you received when you registered.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Tap Sign In on the welcome screen</div>
+            <div class="step-desc">Switch to the Sign In tab at the top of the welcome screen.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Enter your phone number and PIN</div>
+            <div class="step-desc">Use the same number you registered with. Your PIN is the 6-digit code assigned when you registered — check your original WhatsApp welcome message if you have forgotten it, or contact the admin to reset it.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">&#x1F4A1;</span>
+        <span>The app remembers your session for 24 hours. You will not need to sign in again unless you sign out manually or the session expires.</span>
+      </div>
+    </section>
+
+    <hr class="divider"/>
+
+    <!-- ── Browsing ── -->
+    <section class="section" id="browsing">
+      <div class="section-header">
+        <div class="section-icon">&#x1F3EA;</div>
+        <div class="section-title">Browsing Products</div>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">&#x1F3EA;</div>
+          <div class="card-title">Store Tabs</div>
+          <div class="card-desc">Swipe through the store tabs at the top to switch between shops. Each store shows only its own products.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F4C2;</div>
+          <div class="card-title">Category Pills</div>
+          <div class="card-desc">Filter products by category using the pills below the search bar. Tap All to show everything in the selected store.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F50D;</div>
+          <div class="card-title">Search</div>
+          <div class="card-desc">Type a product name or keyword into the search bar to filter the current store's products instantly.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F4F8;</div>
+          <div class="card-title">Product Detail</div>
+          <div class="card-desc">Tap any product card to see its full details — image, description, size, and price — before adding to your cart.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Cart ── -->
+    <section class="section" id="cart">
+      <div class="section-header">
+        <div class="section-icon">&#x1F6D2;</div>
+        <div class="section-title">Your Cart</div>
+      </div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">You can add products from multiple stores into a single cart. Everything gets delivered together in one run.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Tap a product to open its detail sheet</div>
+            <div class="step-desc">From here you can set the quantity using the + and − buttons, and choose what to do if the item is unavailable.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Set your substitution preference</div>
+            <div class="step-desc">Choose one of three options: <strong>Contact me first</strong> (default — the admin will WhatsApp you before substituting), <strong>Allow substitution</strong> (picker chooses a similar item), or <strong>Remove from order</strong> (item is simply dropped if unavailable).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Tap Add to Cart</div>
+            <div class="step-desc">The cart badge at the top of the screen updates immediately. Products already in your cart show a quantity badge on their card.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Review your cart anytime</div>
+            <div class="step-desc">Tap the cart icon or the Cart tab at the bottom. You can increase or decrease quantities directly in the cart list, or clear the cart entirely.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">&#x1F4BE;</span>
+        <span>Your cart is <strong>saved automatically</strong> — even if you close the app and come back later, your items will still be there.</span>
+      </div>
+    </section>
+
+    <!-- ── Checkout ── -->
+    <section class="section" id="checkout">
+      <div class="section-header">
+        <div class="section-icon">&#x2705;</div>
+        <div class="section-title">Placing an Order</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Go to your cart and review your items</div>
+            <div class="step-desc">Check quantities, prices, and the estimated delivery fee at the bottom of the cart.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Select a delivery window</div>
+            <div class="step-desc">Choose from the available delivery slots. Each slot shows the day of the week and the time range. Slots fill up — book early to secure your preferred time.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Choose your payment method</div>
+            <div class="step-desc">Select either <strong>Cash on Delivery</strong> or <strong>EFT</strong>. If you choose EFT, the admin will send banking details via WhatsApp.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Add any notes and tap Place Order</div>
+            <div class="step-desc">Use the notes field for anything the delivery person should know — gate codes, parking instructions, or special requests. Then tap Place Order to confirm.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <div class="step-title">WhatsApp confirmation opens automatically</div>
+            <div class="step-desc">A WhatsApp message with your full order summary will open. The admin receives this as your order confirmation. Your cart is cleared automatically after a successful order.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">&#x1F69A;</span>
+        <span><strong>Delivery fee explained:</strong> The fee is calculated based on the distance from our depot, to each store in your order, then to your delivery address, and back to the depot. All in one circuit. The fee is always rounded up to the nearest R5.</span>
+      </div>
+    </section>
+
+    <hr class="divider"/>
+
+    <!-- ── Tracking ── -->
+    <section class="section" id="tracking">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4CB;</div>
+        <div class="section-title">Tracking Your Order</div>
+      </div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:20px">Tap the Orders tab at the bottom of the screen to see all your orders and their current status.</p>
+      <table class="status-table">
+        <thead>
+          <tr><th>Status</th><th>What it means</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="badge b-pending">Pending</span></td><td>Your order has been received and is waiting for the admin to confirm it.</td></tr>
+          <tr><td><span class="badge b-confirmed">Confirmed</span></td><td>The admin has accepted your order. It will be picked up on the scheduled delivery day.</td></tr>
+          <tr><td><span class="badge b-picking">Picking</span></td><td>Your items are currently being shopped for at the store.</td></tr>
+          <tr><td><span class="badge b-packed">Packed</span></td><td>Your order is packed and ready. You will receive a WhatsApp message with your till slip at this stage.</td></tr>
+          <tr><td><span class="badge b-delivering">Delivering</span></td><td>Your order is on its way to you. Be ready to receive it.</td></tr>
+          <tr><td><span class="badge b-delivered">Delivered</span></td><td>Your order has been delivered successfully.</td></tr>
+          <tr><td><span class="badge b-issue">Issue</span></td><td>There is a problem with your order. The admin will contact you via WhatsApp.</td></tr>
+          <tr><td><span class="badge b-cancelled">Cancelled</span></td><td>Your order has been cancelled.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── WhatsApp ── -->
+    <section class="section" id="whatsapp">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4AC;</div>
+        <div class="section-title">WhatsApp Updates</div>
+      </div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">We use WhatsApp for all important notifications. Make sure your phone number is correct and that you have WhatsApp installed.</p>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">&#x1F511;</div>
+          <div class="card-title">Verification Code</div>
+          <div class="card-desc">Sent when your account is approved. Enter this code in the app to activate your account.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F4CB;</div>
+          <div class="card-title">Order Confirmation</div>
+          <div class="card-desc">Sent immediately after you place an order with your full item list and total.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F4E6;</div>
+          <div class="card-title">Status Updates</div>
+          <div class="card-desc">Sent each time your order moves to a new stage — confirmed, picking, packed, out for delivery, delivered.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F9FE;</div>
+          <div class="card-title">Till Slip</div>
+          <div class="card-desc">Sent when your order is packed. Includes a photo of the till slip so you can verify what was purchased on your behalf.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Payment ── -->
+    <section class="section" id="payment">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4B3;</div>
+        <div class="section-title">Payment</div>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">&#x1F4B5;</div>
+          <div class="card-title">Cash on Delivery</div>
+          <div class="card-desc">Pay the driver in cash when your order arrives. Have the exact amount ready — your total is shown on your order confirmation.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F3E6;</div>
+          <div class="card-title">EFT</div>
+          <div class="card-desc">The admin will send banking details via WhatsApp. Please use your order ID as the payment reference so your payment can be matched quickly.</div>
+        </div>
+      </div>
+      <div class="warn-box">
+        <span class="tip-icon">&#x26A0;</span>
+        <span>Payment covers both the <strong>cost of your goods</strong> and the <strong>delivery fee</strong>. The total shown at checkout is the final amount due.</span>
+      </div>
+    </section>
+
+    <hr class="divider"/>
+
+    <!-- ── Account ── -->
+    <section class="section" id="account">
+      <div class="section-header">
+        <div class="section-icon">&#x1F464;</div>
+        <div class="section-title">Account Settings</div>
+      </div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">Tap the Account tab at the bottom of the screen to view and manage your profile.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">&#x2713;</div>
+          <div class="step-body">
+            <div class="step-title">View your profile details</div>
+            <div class="step-desc">See your registered name, phone number, email, and addresses on file.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">&#x1F4CD;</div>
+          <div class="step-body">
+            <div class="step-title">Update your delivery location</div>
+            <div class="step-desc">Tap Update delivery pin on map to move your delivery pin. This affects the delivery fee calculation for future orders.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">&#x2192;</div>
+          <div class="step-body">
+            <div class="step-title">Sign out</div>
+            <div class="step-desc">Tap Sign Out at the bottom of the account screen. You will need your phone number and PIN to sign back in.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Delivery Address ── -->
+    <section class="section" id="delivery-address">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4CD;</div>
+        <div class="section-title">Delivery Address & Map</div>
+      </div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">The map is used to set your exact delivery location. This is separate from your street address — it is a precise GPS pin used to calculate your delivery fee and guide the driver.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Tap the location button to open the map</div>
+            <div class="step-desc">Available during registration and in the Account screen. The map opens centred on your current GPS position.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Move the pin to your delivery spot</div>
+            <div class="step-desc">Drag the pin or tap anywhere on the map to move it. Use the search bar to find an address if needed. The GPS button in the bottom left will jump to your current location.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Tap Confirm</div>
+            <div class="step-desc">Your address is reverse-geocoded and shown below the map before you confirm. Make sure the description matches your location.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider"/>
+
+    <!-- ── FAQ ── -->
+    <section class="section" id="faq">
+      <div class="section-header">
+        <div class="section-icon">&#x2753;</div>
+        <div class="section-title">Frequently Asked Questions</div>
+      </div>
+      <div class="faq">
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>I registered but my account is still pending. What do I do?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Accounts are approved manually by the admin. Once approved, you will receive a WhatsApp message with your verification code. If it has been more than 24 hours, contact the admin directly via WhatsApp.</div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>My verification code has expired. How do I get a new one?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Codes expire after 30 minutes. Contact the admin and ask them to resend your verification code. They will generate a new one and send it via WhatsApp.</div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>I forgot my PIN. Can I reset it?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Contact the admin via WhatsApp. They can look up your account and assist you. PINs are not stored in a way that can be emailed — the admin will need to reset it manually.</div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>Can I order from more than one shop at a time?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Yes. You can add products from multiple stores into a single cart. All your items will be collected in one run and delivered together. The delivery fee accounts for all the stores in your order.</div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>How is the delivery fee calculated?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">The fee is based on the total distance of the delivery circuit — from the depot to each store (furthest first), then to your address, and back to the depot. The actual fuel cost is multiplied by an operational factor and rounded up to the nearest R5. A minimum fee always applies.</div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>What happens if an item in my order is out of stock?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">This depends on the substitution preference you set when adding the item to your cart. If set to Contact me first (the default), the admin will WhatsApp you before making any changes. If set to Allow substitution, a similar item will be chosen. If set to Remove from order, the item will simply be left out.</div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>What does the till slip WhatsApp message show?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">When your order is packed and ready, the admin photographs the store till slip for your order and sends it to you via WhatsApp along with your order summary. This lets you verify exactly what was bought and what was paid at the shop before delivery arrives. You can also view it anytime in your order history.</div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>Can I cancel an order after placing it?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Contact the admin via WhatsApp as soon as possible. If the order has not yet moved to the Picking stage it can usually be cancelled. Once shopping has begun, cancellation may not be possible.</div></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  item.classList.toggle('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// Highlight active sidebar link on scroll
+const sections = document.querySelectorAll('.section');
+const links    = document.querySelectorAll('.sidebar-link');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// Close sidebar on link click (mobile)
+links.forEach(l => l.addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('open');
+}));
+</script>
+</body>
+</html>
