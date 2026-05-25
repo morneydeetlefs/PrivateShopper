@@ -1511,7 +1511,6 @@ input, select, textarea { font-family: var(--font-body); }
 <!-- ======================================================
      SCRIPTS
      ====================================================== -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="js/geo.js"></script>
 <script src="js/cart.js"></script>
@@ -1546,25 +1545,37 @@ let modalQty      = 1;
 let activeProductId = null;
 
 // ============================================================
-// API HELPER
+// API HELPER — all requests via GET to avoid CORS preflight
 // ============================================================
-async function api(action, body, getParams) {
+async function api(action, body) {
   try {
+    const params = new URLSearchParams({ action });
     if (body) {
-      const res = await fetch(API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, ...body })
+      Object.entries(body).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) {
+          params.append(k, typeof v === 'object' ? JSON.stringify(v) : v);
+        }
       });
-      return await res.json();
-    } else {
-      const params = new URLSearchParams({ action, ...getParams });
-      const res = await fetch(`${API}?${params}`);
-      return await res.json();
     }
+    const res = await fetch(`${API}?${params}`);
+    return await res.json();
   } catch (err) {
     return { error: err.message };
   }
+}
+
+// Cart sync in 20-item chunks to stay under URL length limits
+async function syncCartSafe(token, items) {
+  const CHUNK = 20;
+  for (let i = 0; i < items.length; i += CHUNK) {
+    await api('syncCart', {
+      token,
+      items: items.slice(i, i + CHUNK),
+      append: i > 0 ? 'true' : 'false'
+    });
+  }
+  // Empty cart edge case
+  if (!items.length) await api('syncCart', { token, items: JSON.stringify([]), append: 'false' });
 }
 
 // ============================================================
@@ -1786,8 +1797,8 @@ async function postLoginInit() {
 // ============================================================
 async function loadCatalog() {
   const [storeRes, catRes] = await Promise.all([
-    api('getStores', null, {}),
-    api('getCategories', null, {})
+    api('getStores'),
+    api('getCategories')
   ]);
 
   if (storeRes.stores) {
@@ -1856,7 +1867,7 @@ function selectCat(el, catId) {
 
 async function loadProducts(storeId) {
   document.getElementById('product-grid').innerHTML = '<div class="loader-full"><div class="spin"></div></div>';
-  const res = await api('getProducts', null, { store_id: storeId });
+  const res = await api('getProducts', { store_id: storeId });
   if (res.error) { toast(res.error, 'error'); return; }
   allProducts = res.products || [];
   allProducts.forEach(p => { productStore[p.product_id] = p; });
@@ -2051,7 +2062,7 @@ function updateDeliveryPreview(subtotal) {
 // DELIVERY WINDOWS
 // ============================================================
 async function loadWindows() {
-  const res = await api('getWindows', null, {});
+  const res = await api('getWindows');
   if (res.error || !res.windows) return;
 
   const grid = document.getElementById('window-grid');
@@ -2134,7 +2145,7 @@ async function loadOrders() {
   const el = document.getElementById('orders-list');
   el.innerHTML = '<div class="loader-full"><div class="spin"></div></div>';
 
-  const res = await api('getOrders', null, { user_id: session.user.user_id, token: session.token });
+  const res = await api('getOrders', { user_id: session.user.user_id, token: session.token });
   if (res.error) { el.innerHTML = `<p style="color:var(--danger);padding:20px">${esc(res.error)}</p>`; return; }
 
   const orders = res.orders || [];
@@ -2218,7 +2229,7 @@ function updateGreeting() {
 // ============================================================
 async function init() {
   // Load config
-  const cfgRes = await api('getConfig', null, {});
+  const cfgRes = await api('getConfig');
   if (cfgRes.config) {
     appConfig = cfgRes.config;
     document.getElementById('topbar-brand').textContent = appConfig.app_name || 'Delivery';
