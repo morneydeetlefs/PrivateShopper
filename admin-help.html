@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Help — Admin Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold:        #c9a84c;
+  --gold-dim:    #7a6330;
+  --gold-glow:   #c9a84c18;
+  --gold-border: #c9a84c33;
+  --bg:          #0f1117;
+  --bg-2:        #13161f;
+  --bg-card:     #181c27;
+  --surface:     #1e2333;
+  --border:      #252b3b;
+  --border-2:    #1e2333;
+  --text:        #e2e8f0;
+  --text-dim:    #8892a4;
+  --text-muted:  #4a5568;
+  --danger:      #e05555;
+  --danger-dim:  #e0555518;
+  --success:     #48bb78;
+  --success-dim: #48bb7818;
+  --info:        #4299e1;
+  --info-dim:    #4299e118;
+  --warn:        #ed8936;
+  --warn-dim:    #ed893618;
+  --r:           3px;
+  --r-lg:        6px;
+  --font-ui:     'Syne', sans-serif;
+  --font-mono:   'Syne Mono', monospace;
+  --font-disp:   'Lora', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 14px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+/* ── Layout ── */
+.layout { display: flex; min-height: 100dvh; position: relative; z-index: 1; }
+
+/* Sidebar */
+.sidebar {
+  width: 260px; flex-shrink: 0;
+  background: var(--bg-2);
+  border-right: 1px solid var(--border);
+  position: sticky; top: 0; height: 100dvh;
+  overflow-y: auto; padding: 0 0 32px;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+
+.sidebar-brand {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); font-family: var(--font-mono);
+  margin-bottom: 6px;
+}
+.sidebar-title {
+  font-size: 18px; font-weight: 800;
+  color: var(--text); letter-spacing: -0.02em;
+}
+.sidebar-sub {
+  font-size: 11px; color: var(--text-muted);
+  margin-top: 3px; font-family: var(--font-disp);
+  font-style: italic;
+}
+
+.sidebar-section {
+  padding: 16px 20px 5px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 20px;
+  font-size: 11px; font-weight: 500;
+  color: var(--text-dim); text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.13s;
+}
+.sidebar-link:hover { color: var(--gold); background: var(--gold-glow); border-left-color: var(--gold-border); }
+.sidebar-link.active { color: var(--gold); border-left-color: var(--gold); background: var(--gold-glow); }
+.sidebar-link-icon { font-size: 13px; flex-shrink: 0; }
+
+/* Main */
+.main { flex: 1; max-width: 800px; padding: 48px 40px 80px; }
+
+/* Hero */
+.hero {
+  margin-bottom: 44px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 400;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 14px;
+}
+.hero-title {
+  font-size: 38px; font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.1;
+  color: var(--text); margin-bottom: 14px;
+}
+.hero-title span { color: var(--gold); }
+.hero-sub {
+  font-size: 13px; color: var(--text-dim);
+  max-width: 560px; line-height: 1.7;
+  font-family: var(--font-disp);
+}
+
+/* Section */
+.section { margin-bottom: 48px; scroll-margin-top: 24px; }
+
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 18px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-icon {
+  width: 34px; height: 34px; border-radius: var(--r-lg);
+  background: var(--gold-glow); border: 1px solid var(--gold-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.section-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Steps */
+.steps { display: flex; flex-direction: column; gap: 10px; }
+
+.step {
+  display: flex; gap: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  transition: border-color 0.14s;
+}
+.step:hover { border-color: var(--gold-border); }
+
+.step-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--gold); color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.step-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.step-desc { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+
+/* Cards */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+}
+.card-icon { font-size: 20px; margin-bottom: 8px; }
+.card-title { font-size: 11px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.card-desc { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+
+/* Wide card */
+.card-wide {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.card-wide-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px;
+}
+.card-wide-icon { font-size: 18px; }
+.card-wide-title { font-size: 12px; font-weight: 700; color: var(--text); }
+.card-wide-desc { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+
+/* Flow diagram */
+.flow {
+  display: flex; flex-direction: column; gap: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.flow-step {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-2);
+  position: relative;
+}
+.flow-step:last-child { border-bottom: none; }
+.flow-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  flex-shrink: 0; margin-top: 1px;
+}
+.flow-num.gold    { background: var(--gold); color: var(--bg); }
+.flow-num.success { background: var(--success); color: var(--bg); }
+.flow-num.info    { background: var(--info); color: var(--bg); }
+.flow-num.warn    { background: var(--warn); color: var(--bg); }
+.flow-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.flow-desc { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+.flow-badge {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 10px;
+  align-self: center;
+}
+.fb-wa { background: #25D36622; color: #25D366; }
+.fb-auto { background: var(--info-dim); color: var(--info); }
+.fb-manual { background: var(--warn-dim); color: var(--warn); }
+
+/* Status table */
+.status-table { width: 100%; border-collapse: collapse; }
+.status-table th {
+  text-align: left; padding: 8px 12px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted); border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+}
+.status-table td {
+  padding: 10px 12px; border-bottom: 1px solid var(--border-2);
+  font-size: 11px; color: var(--text-dim); vertical-align: top;
+}
+.status-table tr:last-child td { border-bottom: none; }
+.status-table td:first-child { width: 110px; }
+
+.badge {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 10px;
+}
+.b-pending    { background: var(--warn-dim);    color: var(--warn); }
+.b-confirmed  { background: var(--info-dim);    color: var(--info); }
+.b-picking    { background: var(--info-dim);    color: var(--info); }
+.b-packed     { background: var(--success-dim); color: var(--success); }
+.b-delivering { background: var(--success-dim); color: var(--success); }
+.b-delivered  { background: #48bb7811;          color: #48bb7877; }
+.b-issue      { background: var(--danger-dim);  color: var(--danger); }
+.b-cancelled  { background: #33333322;          color: var(--text-muted); }
+
+/* Tip / warn boxes */
+.tip {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--gold-glow); border: 1px solid var(--gold-border);
+  border-radius: var(--r-lg); padding: 13px 15px;
+  margin: 14px 0; font-size: 11px; color: var(--text-dim); line-height: 1.6;
+}
+.tip-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.tip strong { color: var(--gold); }
+
+.warn-box {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--danger-dim); border: 1px solid #e0555533;
+  border-radius: var(--r-lg); padding: 13px 15px;
+  margin: 14px 0; font-size: 11px; color: var(--text-dim); line-height: 1.6;
+}
+.warn-box strong { color: var(--danger); }
+
+.info-box {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--info-dim); border: 1px solid #4299e133;
+  border-radius: var(--r-lg); padding: 13px 15px;
+  margin: 14px 0; font-size: 11px; color: var(--text-dim); line-height: 1.6;
+}
+.info-box strong { color: var(--info); }
+
+/* Code block */
+.code-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px; color: var(--text-dim);
+  line-height: 1.8; margin: 12px 0;
+  overflow-x: auto;
+}
+.code-block .cm { color: var(--text-muted); }
+.code-block .ck { color: var(--gold); }
+.code-block .cv { color: var(--success); }
+
+/* Keyboard shortcut */
+kbd {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 10px; color: var(--text-dim);
+  padding: 1px 5px;
+}
+
+/* FAQ */
+.faq { display: flex; flex-direction: column; gap: 8px; }
+.faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+}
+.faq-q {
+  width: 100%; background: none; border: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; cursor: pointer;
+  font-family: var(--font-ui); font-size: 12px; font-weight: 600;
+  color: var(--text); text-align: left; transition: background 0.13s;
+}
+.faq-q:hover { background: var(--surface); }
+.faq-q-arrow { font-size: 14px; color: var(--gold); transition: transform 0.2s; flex-shrink: 0; }
+.faq-item.open .faq-q-arrow { transform: rotate(180deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height 0.28s ease; }
+.faq-item.open .faq-a { max-height: 500px; }
+.faq-a-inner { padding: 0 16px 14px; font-size: 11px; color: var(--text-dim); line-height: 1.7; }
+
+/* Divider */
+.divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+/* Inline label */
+.label {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 10px;
+  font-family: var(--font-mono);
+}
+.label-gold    { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--gold-border); }
+.label-success { background: var(--success-dim); color: var(--success); }
+.label-info    { background: var(--info-dim); color: var(--info); }
+.label-danger  { background: var(--danger-dim); color: var(--danger); }
+.label-warn    { background: var(--warn-dim); color: var(--warn); }
+
+/* Settings key display */
+.setting-row {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 8px 0; border-bottom: 1px solid var(--border-2);
+  font-size: 11px;
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-key { font-family: var(--font-mono); color: var(--gold); flex-shrink: 0; min-width: 200px; }
+.setting-desc { color: var(--text-dim); line-height: 1.5; }
+
+/* Mobile */
+.mobile-menu-btn {
+  display: none;
+  position: fixed; top: 14px; left: 14px; z-index: 200;
+  background: var(--bg-card); border: 1px solid var(--gold-border);
+  border-radius: var(--r); color: var(--gold);
+  width: 36px; height: 36px;
+  align-items: center; justify-content: center; font-size: 16px;
+  cursor: pointer;
+}
+@media (max-width: 720px) {
+  .mobile-menu-btn { display: flex; }
+  .sidebar { position: fixed; left: -280px; z-index: 100; transition: left 0.22s; }
+  .sidebar.open { left: 0; box-shadow: 8px 0 32px rgba(0,0,0,0.7); }
+  .main { padding: 68px 18px 60px; }
+  .hero-title { font-size: 26px; }
+  .cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<button class="mobile-menu-btn" onclick="toggleSidebar()">&#9776;</button>
+
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">Neighbourhood Delivery</div>
+      <div class="sidebar-title">Admin Guide</div>
+      <div class="sidebar-sub">Operations Reference</div>
+    </div>
+
+    <div class="sidebar-section">Overview</div>
+    <a class="sidebar-link" href="#overview"><span class="sidebar-link-icon">&#x25A6;</span>How the Admin App Works</a>
+    <a class="sidebar-link" href="#login"><span class="sidebar-link-icon">&#x1F511;</span>Signing In</a>
+    <a class="sidebar-link" href="#dashboard"><span class="sidebar-link-icon">&#x1F4CA;</span>Dashboard</a>
+
+    <div class="sidebar-section">Daily Operations</div>
+    <a class="sidebar-link" href="#customers"><span class="sidebar-link-icon">&#x1F464;</span>Managing Customers</a>
+    <a class="sidebar-link" href="#orders"><span class="sidebar-link-icon">&#x1F4CB;</span>Managing Orders</a>
+    <a class="sidebar-link" href="#picking"><span class="sidebar-link-icon">&#x1F6D2;</span>Picking Lists</a>
+    <a class="sidebar-link" href="#till-slip"><span class="sidebar-link-icon">&#x1F9FE;</span>Till Slip Capture</a>
+    <a class="sidebar-link" href="#delivery"><span class="sidebar-link-icon">&#x1F69A;</span>Delivery Run</a>
+
+    <div class="sidebar-section">Catalogue</div>
+    <a class="sidebar-link" href="#stores"><span class="sidebar-link-icon">&#x1F3EA;</span>Stores</a>
+    <a class="sidebar-link" href="#products"><span class="sidebar-link-icon">&#x1F4E6;</span>Products</a>
+    <a class="sidebar-link" href="#categories"><span class="sidebar-link-icon">&#x1F4C2;</span>Categories</a>
+
+    <div class="sidebar-section">Configuration</div>
+    <a class="sidebar-link" href="#windows"><span class="sidebar-link-icon">&#x1F5D3;</span>Delivery Windows</a>
+    <a class="sidebar-link" href="#settings"><span class="sidebar-link-icon">&#x2699;</span>Settings Reference</a>
+    <a class="sidebar-link" href="#whatsapp"><span class="sidebar-link-icon">&#x1F4AC;</span>WhatsApp Integration</a>
+    <a class="sidebar-link" href="#deployment"><span class="sidebar-link-icon">&#x1F680;</span>Deployment Notes</a>
+    <a class="sidebar-link" href="#faq"><span class="sidebar-link-icon">&#x2753;</span>FAQ</a>
+  </nav>
+
+  <!-- ── Main ── -->
+  <main class="main">
+
+    <div class="hero">
+      <div class="hero-eyebrow">Admin Portal — Help & Reference</div>
+      <h1 class="hero-title">Running the<br/><span>operation</span></h1>
+      <p class="hero-sub">A complete reference for managing customers, orders, picking, deliveries, and the product catalogue — all from the admin portal.</p>
+    </div>
+
+    <!-- ── Overview ── -->
+    <section class="section" id="overview">
+      <div class="section-header">
+        <div class="section-icon">&#x25A6;</div>
+        <div class="section-title">How the Admin App Works</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:16px;line-height:1.7">The admin portal is the operational hub for the entire platform. You control everything here — the product catalogue, customer approvals, order lifecycle, picking and delivery. Customers cannot manage themselves; all approvals, status changes, and notifications flow through you.</p>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">&#x1F464;</div>
+          <div class="card-title">Customers</div>
+          <div class="card-desc">Approve new registrations, send OTP codes via WhatsApp, view delivery locations, and suspend accounts if needed.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F4CB;</div>
+          <div class="card-title">Orders</div>
+          <div class="card-desc">View all orders, move them through the lifecycle, and send automatic WhatsApp status notifications to customers at each stage.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F6D2;</div>
+          <div class="card-title">Picking</div>
+          <div class="card-desc">Generate per-order picking cards grouped by store. Share picking lists with pickers via WhatsApp. Capture till slips per order.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F69A;</div>
+          <div class="card-title">Delivery</div>
+          <div class="card-desc">Generate an optimised delivery route for each window. Share the run with the driver via WhatsApp. Mark orders delivered on the road.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F3EA;</div>
+          <div class="card-title">Catalogue</div>
+          <div class="card-desc">Add and manage stores, categories, and products. Upload product images via drag and drop. All changes are live immediately.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x2699;</div>
+          <div class="card-title">Settings</div>
+          <div class="card-desc">Configure delivery pricing (fuel, multiplier, minimum fee), base location, delivery windows, cutoff times, and app name.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Login ── -->
+    <section class="section" id="login">
+      <div class="section-header">
+        <div class="section-icon">&#x1F511;</div>
+        <div class="section-title">Signing In</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">The admin app is protected by a PIN set in Google Apps Script Script Properties — not stored in the spreadsheet. This means it is never visible to anyone with sheet access.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Open admin.html in your browser</div>
+            <div class="step-desc">The login screen appears immediately. No username is required — only the PIN.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Enter your Admin PIN and press Enter or tap Sign In</div>
+            <div class="step-desc">The PIN is verified securely against Apps Script Script Properties. It is never sent back to the browser.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Your session is saved for 24 hours</div>
+            <div class="step-desc">Closing and reopening the browser tab will keep you signed in until the session expires or you sign out manually.</div>
+          </div>
+        </div>
+      </div>
+      <div class="warn-box">
+        <span class="tip-icon">&#x26A0;</span>
+        <span><strong>If you see Unauthorised errors</strong> after updating the backend: delete all rows below the header in the SESSIONS sheet, then sign in fresh. Sessions use a numeric timestamp — old string-format sessions from earlier versions will not validate.</span>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">&#x1F511;</span>
+        <span>To change your Admin PIN, go to the Apps Script editor → Project Settings → Script Properties → edit the <strong>AdminPIN</strong> value. No redeployment needed for a PIN change.</span>
+      </div>
+    </section>
+
+    <!-- ── Dashboard ── -->
+    <section class="section" id="dashboard">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4CA;</div>
+        <div class="section-title">Dashboard</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">The dashboard loads automatically when you sign in. It gives you a live count of activity across the platform and shows the 10 most recent orders.</p>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">&#x1F7E1;</div>
+          <div class="card-title">Pending Orders</div>
+          <div class="card-desc">Orders placed by customers that have not yet been confirmed. This number also appears as a badge on the Orders nav item.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F535;</div>
+          <div class="card-title">Active Orders</div>
+          <div class="card-desc">Orders currently in progress — confirmed, picking, packed, or delivering.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F7E2;</div>
+          <div class="card-title">Delivered Today</div>
+          <div class="card-desc">Orders marked as delivered. Useful for end-of-day reconciliation.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F464;</div>
+          <div class="card-title">Pending Customers</div>
+          <div class="card-desc">New registrations waiting for approval. A badge also appears on the Customers nav item when this is non-zero.</div>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">&#x21BB;</span>
+        <span>Tap the <strong>Refresh</strong> button on the dashboard to reload live counts without navigating away.</span>
+      </div>
+    </section>
+
+    <hr class="divider"/>
+
+    <!-- ── Customers ── -->
+    <section class="section" id="customers">
+      <div class="section-header">
+        <div class="section-icon">&#x1F464;</div>
+        <div class="section-title">Managing Customers</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">Every new customer starts with a <span class="label b-pending">pending</span> status. They cannot browse or order until you approve them and they complete phone verification.</p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num gold">1</div>
+          <div>
+            <div class="flow-title">Customer registers on the public app</div>
+            <div class="flow-desc">Their account appears in the Customers list with status <span class="label b-pending">pending</span>.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num gold">2</div>
+          <div>
+            <div class="flow-title">You tap Approve in the Customers panel</div>
+            <div class="flow-desc">The system generates a 6-digit OTP valid for 30 minutes and prepares a WhatsApp message.</div>
+          </div>
+          <span class="flow-badge fb-auto">Auto</span>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num gold">3</div>
+          <div>
+            <div class="flow-title">WhatsApp opens with the OTP pre-filled</div>
+            <div class="flow-desc">You tap Send in WhatsApp. The message goes to the customer's number with their verification code.</div>
+          </div>
+          <span class="flow-badge fb-wa">WhatsApp</span>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num success">4</div>
+          <div>
+            <div class="flow-title">Customer enters the code in the app</div>
+            <div class="flow-desc">Their account becomes <span class="label b-packed">active</span> and they can immediately start shopping.</div>
+          </div>
+          <span class="flow-badge fb-manual">Customer</span>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div class="card-wide">
+          <div class="card-wide-header"><span class="card-wide-icon">&#x1F4CD;</span><span class="card-wide-title">View Customer Location</span></div>
+          <div class="card-wide-desc">Tap the map pin icon on any customer row to open a read-only map showing their pinned delivery address. Useful for planning delivery routes and verifying that the address is correct.</div>
+        </div>
+        <div class="card-wide">
+          <div class="card-wide-header"><span class="card-wide-icon">&#x23F8;</span><span class="card-wide-title">Suspending a Customer</span></div>
+          <div class="card-wide-desc">Tap the suspend button on a customer row. A confirmation prompt will appear. Suspended customers cannot log in. You can filter by status to find suspended accounts and reactivate them by contacting you directly.</div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">&#x1F50E;</span>
+        <span>Use the status filter at the top of the Customers panel to show only <strong>Pending</strong> accounts — makes approvals faster during busy registration periods.</span>
+      </div>
+    </section>
+
+    <!-- ── Orders ── -->
+    <section class="section" id="orders">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4CB;</div>
+        <div class="section-title">Managing Orders</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:16px;line-height:1.7">Orders move through a fixed lifecycle. Every status change sends an automatic WhatsApp notification to the customer — the WhatsApp link opens ready to send with a single tap.</p>
+
+      <table class="status-table" style="margin-bottom:20px">
+        <thead><tr><th>Status</th><th>When to set it</th><th>Customer notification</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge b-pending">Pending</span></td>
+            <td>Set automatically when the customer places an order. No action needed.</td>
+            <td>Order confirmation sent by the customer app automatically.</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-confirmed">Confirmed</span></td>
+            <td>Once you have reviewed the order and are happy to proceed.</td>
+            <td>Customer is told their order is confirmed and will be picked soon.</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-picking">Picking</span></td>
+            <td>When the picker leaves to shop for this order.</td>
+            <td>Customer is told their items are being shopped.</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-packed">Packed</span></td>
+            <td>Set automatically when a till slip is attached. Can also be set manually.</td>
+            <td>Customer receives till slip and order summary via WhatsApp.</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-delivering">Delivering</span></td>
+            <td>When the driver sets off for deliveries.</td>
+            <td>Customer is told their order is on the way and reminded of the amount due.</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-delivered">Delivered</span></td>
+            <td>After the driver confirms delivery at the door.</td>
+            <td>Customer receives a delivered confirmation message.</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-issue">Issue</span></td>
+            <td>If something goes wrong — missing item, address not found, payment refused.</td>
+            <td>Customer is told there is an issue and that they will be contacted.</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-cancelled">Cancelled</span></td>
+            <td>If the order cannot proceed for any reason.</td>
+            <td>Customer is notified of the cancellation.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Find the order using the filters</div>
+            <div class="step-desc">Filter by status and/or delivery window to narrow the list. Use the status filter to show only Pending orders that need confirmation.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Tap the edit icon to update the status</div>
+            <div class="step-desc">Select the new status from the dropdown. Optionally add a note — this appears in the customer's WhatsApp notification.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Tap Update & Notify</div>
+            <div class="step-desc">The status is saved and WhatsApp opens automatically with the notification pre-filled. Tap Send in WhatsApp to deliver it to the customer.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">&#x1F9FE;</span>
+        <span>If a till slip has been attached to an order, a <strong>till slip icon</strong> appears in the order row. Tap it to view the image in a new tab.</span>
+      </div>
+    </section>
+
+    <!-- ── Picking ── -->
+    <section class="section" id="picking">
+      <div class="section-header">
+        <div class="section-icon">&#x1F6D2;</div>
+        <div class="section-title">Picking Lists</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">Picking lists show you every order that needs to be shopped for a given delivery window. Orders are grouped by store, then broken into individual per-order cards — one card per customer per store. Each order is picked and paid for separately.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Select a delivery window</div>
+            <div class="step-desc">Use the dropdown at the top of the Picking Lists panel and tap Load. Only orders that are Confirmed or beyond (not Pending or Cancelled) appear.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Review the store sections</div>
+            <div class="step-desc">Each store appears as a separate card. Inside each store you see individual order picking cards — one per customer. The card shows the customer name, payment method, total due, and item list with quantities and substitution rules.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Share the picking list with your picker</div>
+            <div class="step-desc">Tap Share List on a store section. Enter the picker's phone number. WhatsApp opens with the full picking list for that store pre-filled. The picker sees each order as a numbered section with all items listed.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Picker shops each order separately</div>
+            <div class="step-desc">Each customer's items are picked and paid for as a separate transaction. One till slip per order per store.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">&#x1F4F1;</span>
+        <span>Pickers can receive the list on any phone — they do not need the admin app. The WhatsApp message is fully formatted with store name, window time, and numbered order sections.</span>
+      </div>
+    </section>
+
+    <!-- ── Till Slip ── -->
+    <section class="section" id="till-slip">
+      <div class="section-header">
+        <div class="section-icon">&#x1F9FE;</div>
+        <div class="section-title">Till Slip Capture</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">After each order is picked and paid, photograph the till slip and attach it to the order. This gives the customer a receipt before their delivery arrives and creates an audit trail for every order.</p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num gold">1</div>
+          <div>
+            <div class="flow-title">Open the picking card for the order</div>
+            <div class="flow-desc">Find the order in the Picking Lists panel under its store section.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num gold">2</div>
+          <div>
+            <div class="flow-title">Tap Capture Till Slip</div>
+            <div class="flow-desc">On mobile this opens your camera directly. On desktop, a file browser opens. Take a clear photo of the till slip or select an existing image.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num info">3</div>
+          <div>
+            <div class="flow-title">Image uploads to ImgBB automatically</div>
+            <div class="flow-desc">The image is uploaded in the background. A confirmation toast appears when it is saved. The order status moves to Packed automatically.</div>
+          </div>
+          <span class="flow-badge fb-auto">Auto</span>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num success">4</div>
+          <div>
+            <div class="flow-title">Tap Send via WhatsApp</div>
+            <div class="flow-desc">WhatsApp opens with the order summary and a link to the till slip image pre-filled. Tap Send to deliver it to the customer. The customer also sees the till slip link in their order history.</div>
+          </div>
+          <span class="flow-badge fb-wa">WhatsApp</span>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="tip-icon">&#x1F4A1;</span>
+        <span><strong>Send via WhatsApp only appears after the till slip has been uploaded.</strong> This ensures customers always receive their receipt before delivery confirmation.</span>
+      </div>
+
+      <div class="warn-box">
+        <span class="tip-icon">&#x26A0;</span>
+        <span><strong>ImgBB images are public.</strong> Anyone with the URL can view the image. Till slips should not contain sensitive personal information beyond the order total and items.</span>
+      </div>
+    </section>
+
+    <!-- ── Delivery ── -->
+    <section class="section" id="delivery">
+      <div class="section-header">
+        <div class="section-icon">&#x1F69A;</div>
+        <div class="section-title">Delivery Run</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">The Delivery Run panel builds an optimised route for a delivery window. Only orders in Packed or Delivering status appear here. The route visits stores first (furthest from base first), then delivers to customers.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Select the delivery window and tap Load</div>
+            <div class="step-desc">The system calculates the circuit route — base depot to stores (furthest first) then to each customer, and back to the depot.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Review the route</div>
+            <div class="step-desc">Store stops are numbered 1, 2, 3… in gold. Customer stops are lettered A, B, C… in blue. Each customer stop shows the address, total due, and payment method. Tap the phone icon to call a customer directly.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">View on Map</div>
+            <div class="step-desc">Tap View Map to open the full route visualised on an OpenStreetMap with numbered markers and a connecting route line.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Share Run with driver</div>
+            <div class="step-desc">Tap Share Run and enter the driver's phone number. WhatsApp opens with the full ordered stop list — store addresses first, then customer stops with amounts due and payment methods.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <div class="step-title">Mark deliveries as Delivered</div>
+            <div class="step-desc">As each delivery is completed, tap the Delivered button on the customer stop. A confirmation prompt appears, then WhatsApp opens with the customer's delivery confirmation message ready to send.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">&#x1F4CF;</span>
+        <span>The <strong>total km</strong> for the run is shown at the top of the route view. This matches the distance used to calculate each customer's delivery fee.</span>
+      </div>
+    </section>
+
+    <hr class="divider"/>
+
+    <!-- ── Stores ── -->
+    <section class="section" id="stores">
+      <div class="section-header">
+        <div class="section-icon">&#x1F3EA;</div>
+        <div class="section-title">Stores</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">Stores are the shops your pickers visit. Each store has a GPS location used for route planning and delivery fee calculation. You must add at least one store before adding products.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">+</div>
+          <div class="step-body">
+            <div class="step-title">Adding a store</div>
+            <div class="step-desc">Tap Add Store. Enter the store name, category (e.g. Grocery, Pharmacy), and street address. Then tap the map button to pin the store's exact location — drag the pin to the store entrance for the most accurate routing.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">&#x270E;</div>
+          <div class="step-body">
+            <div class="step-title">Editing a store</div>
+            <div class="step-desc">Tap the edit icon on any store row. All fields including the map location can be updated. Changes take effect immediately for future orders — existing orders are not affected.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">&#x2715;</div>
+          <div class="step-body">
+            <div class="step-title">Deactivating a store</div>
+            <div class="step-desc">Tap the deactivate icon. The store is hidden from customers but not deleted. Its products and order history are preserved. Reactivation requires directly updating the STORES sheet active column to true.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">&#x1F4CD;</span>
+        <span>The store's GPS coordinates directly affect <strong>delivery fee calculation</strong> and <strong>route optimisation</strong>. Always pin the store as accurately as possible.</span>
+      </div>
+    </section>
+
+    <!-- ── Products ── -->
+    <section class="section" id="products">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4E6;</div>
+        <div class="section-title">Products</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">Products belong to a store and optionally a category. Customers browse products per store in the customer app. Product availability is not tracked — the picker handles stock issues using substitution rules.</p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">&#x2795;</div>
+          <div class="card-title">Adding a Product</div>
+          <div class="card-desc">Tap Add Product. Select the store, category, and fill in the name, size, and price. Barcode is optional but useful for picker scanning in future. Description is shown to customers in the product detail view.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F4F7;</div>
+          <div class="card-title">Product Images</div>
+          <div class="card-desc">Drag and drop an image onto the upload zone or tap it to browse files. Images upload to ImgBB automatically. On mobile you can use the camera. Paste a URL directly into the hidden field if preferred.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F4F1;</div>
+          <div class="card-title">Barcode Field</div>
+          <div class="card-desc">Enter the product barcode number if known. This appears on picking cards so pickers can scan items to confirm picks. Full scanner integration is planned for a future update.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F4B0;</div>
+          <div class="card-title">Pricing</div>
+          <div class="card-desc">Prices are the amounts charged to the customer — set these to the typical shelf price at the store. Actual till slip prices may vary slightly due to promotions or price changes.</div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="tip-icon">&#x1F4A1;</span>
+        <span>Use the <strong>store filter</strong> at the top of the Products panel to view and manage products for one store at a time. This keeps the list manageable when you have many products across multiple stores.</span>
+      </div>
+    </section>
+
+    <!-- ── Categories ── -->
+    <section class="section" id="categories">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4C2;</div>
+        <div class="section-title">Categories</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">Categories are two levels deep — a parent category (e.g. Dairy) and optional child categories (e.g. Milk, Cheese, Yoghurt). Customers use category pills to filter products while browsing.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Add parent categories first</div>
+            <div class="step-desc">Tap Add Category, enter the name, and leave the parent field blank. Examples: Dairy, Bakery, Meat, Frozen, Household, Personal Care.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Add child categories</div>
+            <div class="step-desc">Tap Add Category again, enter the child name (e.g. Milk), and select the parent from the dropdown. Child categories appear indented inside their parent when browsing.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Assign products to categories</div>
+            <div class="step-desc">When adding or editing a product, select the most specific category that applies. A product in a child category will also appear when the parent category pill is selected.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider"/>
+
+    <!-- ── Windows ── -->
+    <section class="section" id="windows">
+      <div class="section-header">
+        <div class="section-icon">&#x1F5D3;</div>
+        <div class="section-title">Delivery Windows</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">Delivery windows are recurring weekly time slots. Customers choose a window when checking out. Each window has a maximum order capacity — once full, customers cannot select it.</p>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">&#x2795;</div>
+          <div class="card-title">Adding a Window</div>
+          <div class="card-desc">Tap Add Window. Select the day, set the start and end times, and set the maximum number of orders allowed in this slot. The window is active immediately.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x23F8;</div>
+          <div class="card-title">Enabling / Disabling</div>
+          <div class="card-desc">Each window card has an Enable/Disable button. Disabled windows do not appear to customers. Use this for public holidays or when you know you cannot operate a slot.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x270E;</div>
+          <div class="card-title">Editing</div>
+          <div class="card-desc">Tap Edit on any window card to change the day, time, or capacity. Changes apply to new orders only — existing orders for this window are not affected.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#x1F4CA;</div>
+          <div class="card-title">Capacity Planning</div>
+          <div class="card-desc">Set the max orders to a number you can realistically fulfil in one run. Factor in picker time per order and your delivery area size. Start conservative and increase as the operation scales.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Settings ── -->
+    <section class="section" id="settings">
+      <div class="section-header">
+        <div class="section-icon">&#x2699;</div>
+        <div class="section-title">Settings Reference</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:16px;line-height:1.7">All settings are stored in the SETTINGS sheet and editable from the admin portal. Changes take effect immediately for new calculations — no redeployment needed. Tap Save next to any field after editing.</p>
+
+      <div class="setting-row"><span class="setting-key">app_name</span><span class="setting-desc">The name shown in the customer app topbar and in all WhatsApp messages. Change this to your business name.</span></div>
+      <div class="setting-row"><span class="setting-key">base_latitude</span><span class="setting-desc">GPS latitude of your depot or starting point. Used as the start and end of every delivery circuit. Set this via the map button in Settings.</span></div>
+      <div class="setting-row"><span class="setting-key">base_longitude</span><span class="setting-desc">GPS longitude of your depot. Set together with base_latitude using the map button.</span></div>
+      <div class="setting-row"><span class="setting-key">fuel_price</span><span class="setting-desc">Current fuel price per litre in Rands (e.g. 22.00). Update this whenever fuel prices change to keep delivery fees accurate.</span></div>
+      <div class="setting-row"><span class="setting-key">vehicle_km_per_litre</span><span class="setting-desc">Your delivery vehicle's fuel consumption in km per litre. Check your vehicle's spec sheet or track it manually over a few tanks.</span></div>
+      <div class="setting-row"><span class="setting-key">delivery_factor</span><span class="setting-desc">A multiplier applied to the raw fuel cost to cover time, wear, and operational overhead. Default is 1.8. Increase for premium service or higher-cost areas.</span></div>
+      <div class="setting-row"><span class="setting-key">minimum_delivery_fee</span><span class="setting-desc">The floor delivery fee in Rands (e.g. 35). No delivery will cost less than this regardless of distance. Final fee is always rounded up to the nearest R5.</span></div>
+      <div class="setting-row"><span class="setting-key">daily_cutoff_time</span><span class="setting-desc">The time (HH:MM) after which no new orders are accepted for the same day. Example: 08:00 means orders placed after 8am are scheduled for the next available window.</span></div>
+      <div class="setting-row"><span class="setting-key">whatsapp_number</span><span class="setting-desc">Your business WhatsApp number with country code, digits only — no spaces or dashes. Example: 27831234567. Used for customer enquiry links.</span></div>
+      <div class="setting-row"><span class="setting-key">delivery_window_minutes</span><span class="setting-desc">The duration of each delivery window in minutes. Informational only — used in future scheduling features.</span></div>
+
+      <div class="tip" style="margin-top:16px">
+        <span class="tip-icon">&#x26FD;</span>
+        <span>Update <strong>fuel_price</strong> regularly — even small fuel price changes affect every customer's delivery fee. The formula is: <span style="font-family:var(--font-mono);color:var(--gold)">(km ÷ kpl × fuel_price) × factor</span>, rounded up to nearest R5, minimum fee applied.</span>
+      </div>
+    </section>
+
+    <!-- ── WhatsApp ── -->
+    <section class="section" id="whatsapp">
+      <div class="section-header">
+        <div class="section-icon">&#x1F4AC;</div>
+        <div class="section-title">WhatsApp Integration</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">All WhatsApp messages use wa.me deep links — they open WhatsApp with the message pre-filled. You always tap Send manually. Messages use WhatsApp markdown for formatting.</p>
+
+      <table class="status-table">
+        <thead><tr><th>Trigger</th><th>Recipient</th><th>Who sends</th></tr></thead>
+        <tbody>
+          <tr><td>Customer registers</td><td>Customer — OTP code</td><td>You (admin approves and taps Send)</td></tr>
+          <tr><td>Order placed</td><td>Customer — order summary</td><td>Customer app opens WA automatically</td></tr>
+          <tr><td>Order status updated</td><td>Customer — status message</td><td>You (tap Update & Notify, then Send in WA)</td></tr>
+          <tr><td>Till slip attached</td><td>Customer — summary + slip link</td><td>You (tap Send via WhatsApp in picking card)</td></tr>
+          <tr><td>Picking list shared</td><td>Picker — per-store order list</td><td>You (enter picker phone, WA opens)</td></tr>
+          <tr><td>Delivery run shared</td><td>Driver — ordered stop list</td><td>You (enter driver phone, WA opens)</td></tr>
+          <tr><td>Order delivered</td><td>Customer — delivered confirmation</td><td>You (tap Delivered button, WA opens)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip" style="margin-top:16px">
+        <span class="tip-icon">&#x1F4F1;</span>
+        <span>Phone numbers must be in international format with country code — <strong>no leading zero, no spaces, no dashes.</strong> South African example: <span style="font-family:var(--font-mono);color:var(--gold)">27831234567</span> not 083 123 4567.</span>
+      </div>
+    </section>
+
+    <!-- ── Deployment ── -->
+    <section class="section" id="deployment">
+      <div class="section-header">
+        <div class="section-icon">&#x1F680;</div>
+        <div class="section-title">Deployment Notes</div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;line-height:1.7">These are the critical things to know when setting up or updating the platform for the first time.</p>
+
+      <div class="card-wide">
+        <div class="card-wide-header"><span class="card-wide-icon">&#x26A0;</span><span class="card-wide-title">Always deploy a new version after changing Code.gs</span></div>
+        <div class="card-wide-desc">Saving the file in the Apps Script editor does NOT update the live URL. After every change you must go to <strong>Deploy → Manage Deployments → New Version</strong>. The URL stays the same but the code updates.</div>
+      </div>
+
+      <div class="card-wide">
+        <div class="card-wide-header"><span class="card-wide-icon">&#x1F527;</span><span class="card-wide-title">Run setupSheets() once on a new installation</span></div>
+        <div class="card-wide-desc">Open the Apps Script editor, select the setupSheets function from the dropdown, and tap Run. This creates all 14 sheets with the correct headers and seeds default settings. It is safe to run again — it will not overwrite existing data.</div>
+      </div>
+
+      <div class="card-wide">
+        <div class="card-wide-header"><span class="card-wide-icon">&#x1F511;</span><span class="card-wide-title">Set AdminPIN in Script Properties</span></div>
+        <div class="card-wide-desc">In the Apps Script editor go to <strong>Project Settings → Script Properties → Add property</strong>. Set the key to <span style="font-family:var(--font-mono);color:var(--gold)">AdminPIN</span> and the value to your chosen PIN. This is never visible in the spreadsheet.</div>
+      </div>
+
+      <div class="card-wide">
+        <div class="card-wide-header"><span class="card-wide-icon">&#x1F4CB;</span><span class="card-wide-title">Clear the SESSIONS sheet when changing session logic</span></div>
+        <div class="card-wide-desc">If you update Code.gs and change session handling, delete all rows below the header row in the SESSIONS sheet. Old sessions will fail to validate against the new logic — a clean sheet forces fresh logins.</div>
+      </div>
+
+      <div class="card-wide">
+        <div class="card-wide-header"><span class="card-wide-icon">&#x1F517;</span><span class="card-wide-title">Paste your Web App URL into both HTML files</span></div>
+        <div class="card-wide-desc">After deploying, copy the Web App URL from Apps Script. Open <strong>index.html</strong> and <strong>admin.html</strong> and paste it as the value of <span style="font-family:var(--font-mono);color:var(--gold)">const API = '...'</span> near the top of the script block in each file.</div>
+      </div>
+
+      <div class="card-wide">
+        <div class="card-wide-header"><span class="card-wide-icon">&#x1F4F7;</span><span class="card-wide-title">Add your ImgBB API key to admin.html</span></div>
+        <div class="card-wide-desc">Register free at imgbb.com and get an API key. Paste it as <span style="font-family:var(--font-mono);color:var(--gold)">const IMGBB_KEY = '...'</span> in admin.html. This is required for product image uploads and till slip capture.</div>
+      </div>
+
+      <div class="code-block">
+        <span class="cm">// Deployment checklist — top of admin.html and index.html</span><br/>
+        <span class="ck">const</span> <span class="cv">API</span>      = <span style="color:var(--warn)">'https://script.google.com/macros/s/YOUR_ID/exec'</span>;<br/>
+        <span class="ck">const</span> <span class="cv">IMGBB_KEY</span> = <span style="color:var(--warn)">'your_imgbb_api_key'</span>; <span class="cm">// admin.html only</span>
+      </div>
+    </section>
+
+    <hr class="divider"/>
+
+    <!-- ── FAQ ── -->
+    <section class="section" id="faq">
+      <div class="section-header">
+        <div class="section-icon">&#x2753;</div>
+        <div class="section-title">Frequently Asked Questions</div>
+      </div>
+      <div class="faq">
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>I get Unauthorised every time I try to use the admin app.</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            The most common cause is stale session data in the SESSIONS sheet. Open your Google Sheet, go to the SESSIONS tab, and delete all rows below the header. Then sign in fresh. If the problem persists, check that your AdminPIN is set correctly in Script Properties and that you have deployed a new version after the last Code.gs change.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>I saved Code.gs but my changes are not working on the live app.</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Saving the file in Apps Script does not update the live endpoint. You must go to Deploy → Manage Deployments → create a New Version every time you change Code.gs. The URL remains the same — only the code behind it updates.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>A customer's OTP expired before they could enter it. What do I do?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Go to the Customers panel, find the customer, and tap Approve again. This generates a fresh 6-digit OTP with a new 30-minute expiry and opens WhatsApp with the new code ready to send. The old code is automatically invalidated.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>The picking list is empty even though there are confirmed orders.</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Picking lists only show orders with a status of Confirmed or beyond. Orders still in Pending status do not appear. Go to the Orders panel, filter by Pending, and confirm any orders that should be picked. Then reload the picking list.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>The delivery run is empty even though orders are packed.</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            The delivery run only shows orders with Packed or Delivering status. Make sure orders have had their till slips captured (which automatically sets them to Packed), or manually update their status to Packed in the Orders panel.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>How do I change the delivery fee for a specific order?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Delivery fees are calculated at the moment an order is placed and stored in the ORDERS sheet. To adjust a specific order's fee, open your Google Sheet, find the order in the ORDERS tab, and edit the delivery_fee and total columns directly. Use the order notes field to record the reason for the adjustment.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>Can I add products from a spreadsheet instead of one by one?</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Yes — you can paste rows directly into the PRODUCTS sheet in Google Sheets. Make sure the columns match the schema exactly: product_id, store_id, cat_id, name, description, size, barcode, price, image_url, active, updated_at. Set active to true and provide a unique product_id for each row. Changes are live immediately — no restart or redeployment needed.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>WhatsApp opens but the message is not pre-filled.</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            This can happen if the URL becomes too long for WhatsApp to parse on some devices. Try shortening the order notes or product descriptions for affected orders. WhatsApp deep links have an unofficial character limit that varies by device — if this is a recurring issue, the message content can be shortened in Code.gs.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>A store needs to be reactivated after being deactivated.</span>
+            <span class="faq-q-arrow">&#x2303;</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Open your Google Sheet, go to the STORES tab, find the store row, and change the active column value from false to true. The store will reappear in the customer app immediately. A reactivation button may be added to the admin portal in a future update.
+          </div></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+function toggleFaq(btn) {
+  btn.closest('.faq-item').classList.toggle('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+const sections = document.querySelectorAll('.section');
+const links    = document.querySelectorAll('.sidebar-link');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);
+      if (a) a.classList.add('active');
+    }
+  });
+}, { rootMargin: '-25% 0px -65% 0px' });
+sections.forEach(s => observer.observe(s));
+
+links.forEach(l => l.addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('open');
+}));
+</script>
+</body>
+</html>
